@@ -5,10 +5,16 @@ stemmer = LancasterStemmer()
 import numpy
 import tflearn
 import tensorflow
+from tensorflow.python.framework import ops
 import random
 import json
 import pickle
 from mysql_python_interface import read_from_db
+from dotenv import dotenv_values
+
+env = dotenv_values(".env")
+PATTERNS_TABLE = env["patterns_table"]
+RESPONSES_TABLE = env["responses_table"]
 
 try:
     with open("data.pickle", "rb") as f:
@@ -19,13 +25,13 @@ except:
     docs_x = []
     docs_y = []
 
-    patterns_from_db = read_from_db("tag_patterns","*")
+    patterns_from_db = read_from_db(PATTERNS_TABLE,"*")
 
     for pattern_tag in patterns_from_db:
         wrds = nltk.word_tokenize(pattern_tag[1])
-        words.extends(wrds)
-        docs_x.appends(wrds)
-        docs_y.appends(pattern_tag[0])
+        words.extend(wrds)
+        docs_x.append(wrds)
+        docs_y.append(pattern_tag[0])
 
         if pattern_tag[0] not in labels:
             labels.append(pattern_tag[0])
@@ -63,9 +69,9 @@ except:
     with open("data.pickle","wb") as f:
         pickle.dump((words,labels, training, output), f)
 
-tensorflow.reset_default_graph()
+ops.reset_default_graph()
 
-net = tflearn.input_data(shape=[None, len(traning[0])])
+net = tflearn.input_data(shape=[None, len(training[0])])
 net = tflearn.fully_connected(net, 32)
 net = tflearn.fully_connected(net, 32)
 net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
@@ -73,7 +79,7 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 
-model.fit(training, output, n_epoch=5000, batch_size=8, show_metric=True)
+model.fit(training, output, n_epoch=500, batch_size=8, show_metric=True)
 model.save("model.tflearn")
 
 def bag_of_words(s,words):
@@ -102,7 +108,7 @@ def create_response(inp):
         with open("data_response.pickle","rb") as f:
             responses_from_db = pickle.load(f)
     except:
-        responses_from_db = read_from_db("tag_responses","*")
+        responses_from_db = read_from_db(RESPONSES_TABLE,"*")
 
         with open("data_response.pickle","wb") as f:
             pickle.dump((responses_from_db),f)

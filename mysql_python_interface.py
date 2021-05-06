@@ -1,9 +1,16 @@
 import mysql.connector
 import json
+from dotenv import dotenv_values
+
+env = dotenv_values(".env")
+HOST = env["host"]
+SQL_USERNAME = env["sql_username"]
+SQL_PASSWORD = env["sql_password"]
+DATABASE = env["database"]
 
 def connectDB():
     mydb = mysql.connector.connect(
-      host="localhost",
+      host= HOST,
       user= SQL_USERNAME,
       passwd= SQL_PASSWORD,
       database= DATABASE # you may use this some other time

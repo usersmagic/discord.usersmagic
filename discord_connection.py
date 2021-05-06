@@ -1,9 +1,11 @@
 # Work with Python 3.6
 import discord
-from main import *
+from chat_bot import *
 import os
+from dotenv import load_dotenv
 
-TOKEN = os.environ['discord_token']
+env = dotenv_values(".env")
+TOKEN = env['discord_token']
 
 client = discord.Client()
 channels = []

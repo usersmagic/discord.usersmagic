@@ -32,6 +32,7 @@ def get_bot_from_channel(ch):
 @client.event
 async def on_message(message):
     ch = message.channel
+
     if ch in channels:
         botStatus = get_bot_from_channel(ch)
     else:
@@ -49,12 +50,11 @@ async def on_message(message):
         print(msg)
         await message.channel.send(msg)
 
-    # if message.content.startswith('!connect') or message.content.startswith('!gel'):
-    #     message.channel.send("Yettim gari")
-    #     botStatus.connect()
-    #
-    # if message.content.startswith('!disconnect') or message.content.startswith('!git'):
-    #     botStatus.disconnect()
+    if message.content.startswith('#gel'):
+        botStatus.connect()
+
+    if message.content.startswith('#git'):
+        botStatus.disconnect()
 
 @client.event
 async def on_member_join(ctx, *, member):
@@ -68,6 +68,5 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    botStatus.connect()
 
 client.run(TOKEN)

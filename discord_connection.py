@@ -49,12 +49,18 @@ async def on_message(message):
         print(msg)
         await message.channel.send(msg)
 
-    if message.content.startswith('!connect') or message.content.startswith('!gel'):
-        message.channel.send("Yettim gari")
-        botStatus.connect()
+    # if message.content.startswith('!connect') or message.content.startswith('!gel'):
+    #     message.channel.send("Yettim gari")
+    #     botStatus.connect()
+    #
+    # if message.content.startswith('!disconnect') or message.content.startswith('!git'):
+    #     botStatus.disconnect()
 
-    if message.content.startswith('!disconnect') or message.content.startswith('!git'):
-        botStatus.disconnect()
+@client.event
+async def on_member_join(ctx, *, member):
+    channel = member.server.get_channel("channel id")
+    fmt = 'Welcome to the {1.name} Discord server, {0.mention}'
+    await ctx.send_message(channel, fmt.format(member, member.server))
 
 @client.event
 async def on_ready():
@@ -62,5 +68,6 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    botStatus.connect()
 
 client.run(TOKEN)

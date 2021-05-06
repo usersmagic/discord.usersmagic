@@ -50,10 +50,10 @@ async def on_message(message):
         print(msg)
         await message.channel.send(msg)
 
-    if message.content.startswith('#gel'):
+    if message.content.startswith('!bağlan'):
         botStatus.connect()
 
-    if message.content.startswith('#git'):
+    if message.content.startswith('!kop'):
         botStatus.disconnect()
 
 @client.event

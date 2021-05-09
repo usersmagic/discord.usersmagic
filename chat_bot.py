@@ -79,7 +79,7 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 
-model.fit(training, output, n_epoch=500, batch_size=8, show_metric=True)
+model.fit(training, output, n_epoch=50, batch_size=8, show_metric=True)
 model.save("model.tflearn")
 
 def bag_of_words(s,words):

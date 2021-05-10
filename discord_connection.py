@@ -72,7 +72,8 @@ async def on_message(message):
             print(message.content)
             msg = create_response(message.content)
             print(msg)
-            await message.channel.send(msg)
+            if msg != "no response":
+                await message.channel.send(msg)
 
         if message.content.startswith('!bağlan') and (str(DEVELOPER) == str(message.author.id) or str(ADMIN1) == str(message.author.id) or str(ADMIN2) == str(message.author.id)):
             botStatus.connect()

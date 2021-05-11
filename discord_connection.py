@@ -94,8 +94,9 @@ async def on_ready():
     for guild in client.guilds:
         print("operating on servers: {}, {}".format(guild.name, guild.id))
         for channel in guild.text_channels:
-            idchannel = channel.id
-            print(idchannel)
+            if channel.id == 831135841703165975:
+                idchannel = channel.id
+                print(idchannel)
 
     print('------')
 

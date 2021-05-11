@@ -66,22 +66,21 @@ except:
     training = numpy.array(training)
     output = numpy.array(output)
 
-    try:
-        with open("data.pickle","wb") as f:
-            pickle.dump((words,labels, training, output), f)
-    except:
-        ops.reset_default_graph()
+    with open("data.pickle","wb") as f:
+        pickle.dump((words,labels, training, output), f)
 
-        net = tflearn.input_data(shape=[None, len(training[0])])
-        net = tflearn.fully_connected(net, 32)
-        net = tflearn.fully_connected(net, 32)
-        net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
-        net = tflearn.regression(net)
+ops.reset_default_graph()
 
-        model = tflearn.DNN(net)
+net = tflearn.input_data(shape=[None, len(training[0])])
+net = tflearn.fully_connected(net, 32)
+net = tflearn.fully_connected(net, 32)
+net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
+net = tflearn.regression(net)
 
-        model.fit(training, output, n_epoch=50, batch_size=8, show_metric=True)
-        model.save("model.tflearn")
+model = tflearn.DNN(net)
+
+model.fit(training, output, n_epoch=50, batch_size=8, show_metric=True)
+model.save("model.tflearn")
 
 def bag_of_words(s,words):
     bag = [0 for _ in range(len(words))]

@@ -42,8 +42,9 @@ def get_bot_from_channel(ch):
 
 @client.event
 async def on_message(message):
+    global idchannel
     #advertisement filter
-    if((str(message.channel.id) != str(DEVELOPER_CHANNEL) and message.channel.id != ADMIN1_CHANNEL and message.channel.id != ADMIN2_CHANNEL) and ("usersmagic" not in message.content or "discord" not in message.content) and ("https://" in message.content or "http://" in message.content or "www" in message.content) ):
+    if(message.channel.id == idchannel and not (has_role(message.author, "Yönetici") or has_role(message.author, "Moderatör")) and ("usersmagic" not in message.content or "discord" not in message.content) and ("https://" in message.content or "http://" in message.content or "www" in message.content) ):
         await message.delete()
         await message.channel.send("İllegal link paylaşımı algılandı, bu durum ilgili birimlere bildirilmiştir...")
         developer = await client.fetch_user(DEVELOPER)
@@ -75,10 +76,10 @@ async def on_message(message):
             if msg != "no response":
                 await message.channel.send(msg)
 
-        if message.content.startswith('!bağlan') and (str(DEVELOPER) == str(message.author.id) or str(ADMIN1) == str(message.author.id) or str(ADMIN2) == str(message.author.id)):
+        if message.content.startswith('!bağlan') and has_role(message.author, "Yönetici"):
             botStatus.connect()
 
-        if message.content.startswith('!kop') and (str(DEVELOPER) == str(message.author.id) or str(ADMIN1) == str(message.author.id) or str(ADMIN2) == str(message.author.id)):
+        if message.content.startswith('!kop') and has_role(message.author, "Yönetici"):
             botStatus.disconnect()
 
 @client.event
@@ -98,5 +99,14 @@ async def on_ready():
             print(idchannel)
 
     print('------')
+
+def has_role(member, role):
+    roles = member.roles
+
+    for m_role in roles:
+        if m_role.name == role:
+            return True
+
+    return False
 
 client.run(TOKEN)

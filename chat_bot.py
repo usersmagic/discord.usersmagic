@@ -17,6 +17,7 @@ PATTERNS_TABLE = env["patterns_table"]
 RESPONSES_TABLE = env["responses_table"]
 
 try:
+    x
     with open("data.pickle", "rb") as f:
         words, labels, training, output = pickle.load(f)
 except:

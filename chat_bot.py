@@ -17,7 +17,6 @@ PATTERNS_TABLE = env["patterns_table"]
 RESPONSES_TABLE = env["responses_table"]
 
 try:
-    x
     with open("data.pickle", "rb") as f:
         words, labels, training, output = pickle.load(f)
 except:
@@ -67,21 +66,22 @@ except:
     training = numpy.array(training)
     output = numpy.array(output)
 
-    with open("data.pickle","wb") as f:
-        pickle.dump((words,labels, training, output), f)
+    try:
+        with open("data.pickle","wb") as f:
+            pickle.dump((words,labels, training, output), f)
+    except:
+        ops.reset_default_graph()
 
-ops.reset_default_graph()
+        net = tflearn.input_data(shape=[None, len(training[0])])
+        net = tflearn.fully_connected(net, 32)
+        net = tflearn.fully_connected(net, 32)
+        net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
+        net = tflearn.regression(net)
 
-net = tflearn.input_data(shape=[None, len(training[0])])
-net = tflearn.fully_connected(net, 32)
-net = tflearn.fully_connected(net, 32)
-net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
-net = tflearn.regression(net)
+        model = tflearn.DNN(net)
 
-model = tflearn.DNN(net)
-
-model.fit(training, output, n_epoch=5000, batch_size=8, show_metric=True)
-model.save("model.tflearn")
+        model.fit(training, output, n_epoch=50, batch_size=8, show_metric=True)
+        model.save("model.tflearn")
 
 def bag_of_words(s,words):
     bag = [0 for _ in range(len(words))]
@@ -100,29 +100,25 @@ def create_response(inp):
     results = model.predict([bag_of_words(inp,words)]) # render probabilities
     results_index = numpy.argmax(results) # choose the highest probability in the array
 
-    print(results)
+    # print(results)
 
-    if results[0][results_index] > 0.4:
-        tag = labels[results_index]
+    #if results[results_index] > 0.6:
+    tag = labels[results_index]
 
-        try:
-            x
-            with open("data_response.pickle","rb") as f:
-                responses_from_db = pickle.load(f)
-        except:
-            responses_from_db = read_from_db(RESPONSES_TABLE,"*")
+    try:
+        with open("data_response.pickle","rb") as f:
+            responses_from_db = pickle.load(f)
+    except:
+        responses_from_db = read_from_db(RESPONSES_TABLE,"*")
 
-            with open("data_response.pickle","wb") as f:
-                pickle.dump((responses_from_db),f)
+        with open("data_response.pickle","wb") as f:
+            pickle.dump((responses_from_db),f)
 
-        responses = []
-        if len(responses_from_db) == 0:
-            return "no response"
+    responses = []
+    if len(responses_from_db) == 0:
+        return "Buna verecek bir cevabım yok, hayretler içerisindeyim"
+    for tag_response in responses_from_db:
+        if tag_response[0] == tag:
+            responses.append(tag_response[1])
 
-        for tag_response in responses_from_db:
-            if tag_response[0] == tag:
-                responses.append(tag_response[1])
-
-        return random.choice(responses)
-    else:
-        return "no response"
+    return random.choice(responses)

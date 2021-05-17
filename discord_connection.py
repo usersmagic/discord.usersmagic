@@ -12,13 +12,14 @@ ADMIN1 = env['admin1']
 ADMIN1_CHANNEL = env['admin1_channel_id']
 ADMIN2 = env['admin2']
 ADMIN2_CHANNEL = env['admin2_channel_id']
+GENERAL_TXT_CHANNEL = env['general_text_id']
 
 intents = discord.Intents.default()
 intents.members = True
 
 client = discord.Client(intents=intents)
 channels = []
-idchannel = 0
+idchannel = GENERAL_TXT_CHANNEL
 
 class Status:
     def __init__(self,connected,channel):
@@ -84,7 +85,8 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    await client.get_channel(idchannel).send(f"Hoşgeldin {member.name}!")
+    welcome_message = f"Hoşgeldin {member.name}!"
+    await member.send(welcome_message)
 
 @client.event
 async def on_ready():

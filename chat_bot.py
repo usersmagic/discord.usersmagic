@@ -102,7 +102,7 @@ def create_response(inp):
 
     print(results)
 
-    if results[0][results_index] > 0.4:
+    if results[0][results_index] > 0.7:
         tag = labels[results_index]
 
         try:
@@ -120,6 +120,9 @@ def create_response(inp):
             return "no response"
 
         for tag_response in responses_from_db:
+            print(tag_response[0])
+            print(tag)
+            print(tag_response[0] == tag)
             if tag_response[0] == tag:
                 responses.append(tag_response[1])
 

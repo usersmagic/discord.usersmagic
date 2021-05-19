@@ -85,8 +85,24 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    welcome_message = f"Hoşgeldin {member.name}!"
+    with open('images/usersmagic_title.png', 'rb') as f:
+        picture = discord.File(f)
+        await member.send(file=picture)
+
+    welcome_message = f"**Usersmagic Discord Topluluğu**'na **Hoşgeldin {member.name}**,\n\nSizi **usersmagic.com**'un bir üyesi olarak görmekten mutluluk duyuyoruz ve burada bulunduğunuz sürece keyif alacağınızı umuyoruz. :tophat: :innocent:\n\nBu sunucu, sizi Usersmagic ve sitemiz üzerinden para kazanabileceğiniz Usersmagic projeleri hakkında bilgilendirmek içindir. Kısa ve kolay anketlerle hızlıca para kazanabileceksiniz."
     await member.send(welcome_message)
+
+    with open('images/server_rules.png', 'rb') as f:
+        picture = discord.File(f)
+        await member.send(file=picture)
+
+    rules = f":small_blue_diamond: Diğer Kullanıcıları Rahatsız Etmeyin: Topluluğumuz üyelerini rahatsız edecek her türlü eylemden kaçınınız. Görevli olmayan topluluk üyelerine özelden mesaj atmayınız. Topluluğumuzda, Irkçılık, cinsiyetçilik, yabancı düşmanlığı, transfobi, homofobi, kadın düşmanlığı vb. eylemler yasaktır ve ban sebebidir.\n:small_blue_diamond: Topluluk içerisindeki iletişiminizi izniniz olan kanallarda yürütün: Aksi olasılıklarda topluluk yetkililerimizce uyarılacaksınız.\n:small_blue_diamond: Uygun bir dille kendinizi ifade edin: Topluluk kurallarımızla bağdaşmayacak şekilde, saygısızca belirtilecek olan herhangi bir görüş ban sebebidir. Topluluk içerisindekilerle karşılıklı saygıyı koruyunuz.\n:small_blue_diamond: Yetkiniz dışında hareket etmeyiniz: Diğer Usersmagic Discord Topluluğu kullanıcıları adına, moderatörler ya da yöneticiler adına görüş bildirmeyiniz.\n:small_blue_diamond: Arka arkaya 'Spam' mesajlar atmayınız: Herhangi bir konu hakkında, ne olursa olsun arka arkaya 'metin kanalı'nı ve tüm Usersmagic Discord Topluluğunu rahatsız edecek şekilde mesaj atmayınız. Bu geçici ban sebebi olarak değerlendirilebilir.\n:small_blue_diamond: Discord NSFW kuralları dışında bir içerik paylaşmayınız: Sunucu içerisinde ifade edeceğiniz her türlü mesaj ve içerik, sözlü ya da yazılı olması fark etmeksizin Discord NSFW kurallarına uymalıdır.\n"
+
+    rules2 = ":small_blue_diamond: Uygunsuz veya saldırgan kullanıcı adları, durum veya profil resimleri kullanmayınız: Topluluk yetkililerince, bunları değiştirmeniz istenebilir.\n:small_blue_diamond: Yetkililer dışında paylaşılacak her türlü reklam, tanıtım, ticari kaygı içeren topluluk dışı içerik ve benzeri, hiçbir istisna içermeksizin yasaktır: Topluluğumuzun hiçbir 'metin kanalı'nda ya da 'sesli oda'sında ve hatta topluluğumuz içerisinde bulunan diğer kullanıcılara özelden bu tarz mesajlar içeren içerikler yollamak bu yasaklara tamamen dahildir.\n:small_blue_diamond: Topluluk yetkilileri dışında herhangi bir internet linki paylaşmak yasaktır: Bu, bundan önceki ve bundan sonraki hiçbir maddede belirtilen olgulara aykırı olmayan herhangi bir talebinizde @Moderatör 'lerimize ulaşınız.\n:small_blue_diamond: Usersmagic Discord Topluluğu Yetkilileri olan @Yönetici ve @Moderatör 'leri yetkilidir: Onların görevlerini sağlıkla sürdürmelerine yardımcı olunuz.\n:small_blue_diamond: Usersmagic Kullanıcı Sözleşmesi'ne, Discord Hizmet Koşulları'na ve Discord Topluluk İlkeleri'ne saygı duyunuz;\n\n:mega: https://tester.usersmagic.com/agreement/user.\n:mega: https://discord.com/terms.\n:mega: https://discord.com/guidelines."
+
+    await member.send(rules)
+    await member.send(rules2)
+
 
 @client.event
 async def on_ready():

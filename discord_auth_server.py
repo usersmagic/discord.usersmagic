@@ -58,6 +58,12 @@ def addUserToGuild(token_type, access_token, user_id):
     r = requests.put('%s/guilds/{}/members/{}'.format(GUILD_ID, user_id) % API_ENDPOINT, headers= headers, data=json.dumps(data))
     print(r.status_code)
 
+def sendBackUserId(id, conn):
+    print("id: {}".format(id))
+    data = AESCipher.encrypt(id)
+    conn.send(data)
+    # you need control here, if it works
+
 # handle connections
 def connection_thread(conn):
     data = conn.recv(1024)
@@ -65,7 +71,6 @@ def connection_thread(conn):
 
     data = AESCipher.decrypt(data)
     logging.info("decrypted: {}".format(data))
-    conn.close()
 
     if "code=" in data:
         code_state = data.split('&')
@@ -74,7 +79,9 @@ def connection_thread(conn):
         ret = exchange_code(code)
         user_inf = getUserInformation(ret['token_type'], ret['access_token'])
         addUserToGuild(ret['token_type'], ret['access_token'], user_inf["user"]["id"])
+        sendBackUserId(user_inf["user"]["id"], conn)
 
+    conn.close()
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

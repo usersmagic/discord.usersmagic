@@ -13,9 +13,14 @@ class AESCipher(object):
 
     def encrypt(self, raw):
         raw = self._pad(raw)
-        iv = Random.new().read(AES.block_size)
+        iv = Random.new().read(16)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return base64.b64encode(iv + cipher.encrypt(raw.encode()))
+
+        iv = base64.b64encode(iv)
+        cipher = base64.b64encode(cipher.encrypt(raw.encode()))
+        print("iv: {} \ncipher: {}".format(iv,cipher))
+
+        return iv + b',' + cipher
 
     def decrypt(self, enc):
         enc = enc.decode().split(",")
